@@ -16,12 +16,25 @@ struct AppetizerListView: View {
             NavigationView {
                 List(viewModel.appetizers) { appetizer in
                     AppletizerListCell(appetizer: appetizer)
+                        .onTapGesture {
+                            viewModel.selectedAppetizer = appetizer
+                            viewModel.isShowingDetail = true
+                        }
                 }
                 .navigationTitle("🍟 Appetizers")
+                .disabled(viewModel.isShowingDetail)
             }
             .onAppear {
                 viewModel.getAppetizers()
             }
+            .blur(radius: viewModel.isShowingDetail ? 20 : 0)
+            
+            if viewModel.isShowingDetail {
+                if  let selectedAppetizer = viewModel.selectedAppetizer {
+                    AppetizerDetailsView(appetizer: selectedAppetizer, isShowingDetail: $viewModel.isShowingDetail)
+                }
+            }
+            
             if viewModel.isLoading {
                 LoadingView()
             }
@@ -33,9 +46,7 @@ struct AppetizerListView: View {
                   dismissButton: alertItem.dismissButton)
         }
     }
-    
 }
-
 
 #Preview {
     AppetizerListView()
