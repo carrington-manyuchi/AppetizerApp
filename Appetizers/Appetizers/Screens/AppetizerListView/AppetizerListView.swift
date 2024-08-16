@@ -17,7 +17,7 @@ struct AppetizerListView: View {
                 List(viewModel.appetizers) { appetizer in
                     AppletizerListCell(appetizer: appetizer)
                 }
-                .navigationTitle("Appetizers")
+                .navigationTitle("🍟 Appetizers")
             }
             .onAppear {
                 viewModel.getAppetizers()
