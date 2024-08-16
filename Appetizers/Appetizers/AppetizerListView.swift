@@ -9,16 +9,27 @@ import SwiftUI
 
 struct AppetizerListView: View {
     
-    
+    @StateObject var viewModel = AppetizerListViewModel()
     
     var body: some View {
-        NavigationView {
-            List(MockData.appetizers) { appetizer in
-                AppletizerListCell(appetizer: appetizer)
+        ZStack {
+            NavigationView {
+                List(viewModel.appetizers) { appetizer in
+                    AppletizerListCell(appetizer: appetizer)
+                }
+                .navigationTitle("Appetizers")
             }
-            .navigationTitle("Appetizers")
+            .onAppear {
+                viewModel.getAppetizers()
+            }
+            .alert(item: $viewModel.alertItem) { alertItem in
+                Alert(title: alertItem.title,
+                      message: alertItem.message,
+                      dismissButton: alertItem.dismissButton)
+            }
         }
     }
+    
 }
 
 
