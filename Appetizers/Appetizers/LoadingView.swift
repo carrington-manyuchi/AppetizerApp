@@ -24,7 +24,7 @@ struct ActivityIndicator: UIViewRepresentable {
 }
 
 
-struct LoadingVIew: View {
+struct LoadingView: View {
     var body: some View {
         ZStack {
             Color(.systemBackground)
@@ -36,5 +36,5 @@ struct LoadingVIew: View {
 
 
 #Preview {
-    LoadingVIew()
+    LoadingView()
 }
