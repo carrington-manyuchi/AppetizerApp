@@ -10,29 +10,23 @@ import SwiftUI
 
 struct AccountView: View {
     
-    @State private var firstName = ""
-    @State private var lastName = ""
-    @State private var email = ""
-    @State private var birthDate = Date()
-    @State private var extraNapkins = false
-    @State private var frequentRefills = false
-
+    @StateObject var viewModel = AccountViewModel()
     
     var body: some View {
         NavigationView {
             
             Form {
                 Section {
-                    TextField("First Name", text: $firstName)
-                    TextField("Last Name", text: $lastName)
-                    TextField("Email", text: $email)
+                    TextField("First Name", text: $viewModel.user.firstName)
+                    TextField("Last Name", text: $viewModel.user.lastName)
+                    TextField("Email", text: $viewModel.user.email)
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
-                    DatePicker("Birthday", selection: $birthDate, displayedComponents: .date)
+                    DatePicker("Birthday", selection: $viewModel.user.birthDate, displayedComponents: .date)
                     
                     Button(action: {
-                        print("save")
+                        viewModel.saveChanges()
                     }, label: {
                         Text("Save Changes")
                     })
@@ -42,10 +36,10 @@ struct AccountView: View {
                 }
                 
                 Section {
-                    Toggle(isOn: $extraNapkins, label: {
+                    Toggle(isOn: $viewModel.user.extraNapkins, label: {
                         Text("Extra Napkins")
                     })
-                    Toggle(isOn: $frequentRefills, label: {
+                    Toggle(isOn: $viewModel.user.frequentRefills, label: {
                         Text("Frequent Refills")
                     })
                 } header: {
@@ -54,9 +48,16 @@ struct AccountView: View {
                 .toggleStyle(SwitchToggleStyle(tint: .brandPrimary))
 
                 }
+                .navigationTitle("👨🏼 Account")
             }
-             .navigationTitle("👨🏼 Account")
-            
+        .onAppear(perform: {
+            viewModel.retrieveUser()
+        })
+            .alert(item: $viewModel.alertItem) { alertItem in
+                Alert(title: alertItem.title,
+                      message: alertItem.message,
+                      dismissButton: alertItem.dismissButton)
+            }
         }
     }
 
